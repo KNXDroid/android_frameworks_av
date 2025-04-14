@@ -4130,6 +4130,7 @@ void AudioFlinger::updateSecondaryOutputsForTrack_l(
 
         const audio_output_flags_t outputFlags =
                 (audio_output_flags_t)(track->getOutputFlags() & ~kIncompatiblePatchTrackFlags);
+        const AudioPlaybackRate playbackRate = track->audioTrackServerProxy()->getPlaybackRate();
         sp<IAfPatchTrack> patchTrack = IAfPatchTrack::create(secondaryThread,
                                                        track->streamType(),
                                                        track->sampleRate(),
@@ -4141,7 +4142,7 @@ void AudioFlinger::updateSecondaryOutputsForTrack_l(
                                                        outputFlags,
                                                        0ns /* timeout */,
                                                        frameCountToBeReady,
-                                                       track->getSpeed(),
+                                                       playbackRate.mSpeed,
                                                        1.f /* volume */);
         status = patchTrack->initCheck();
         if (status != NO_ERROR) {
